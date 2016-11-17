@@ -5,9 +5,13 @@ numberOfArms = 10
 Q = [0.0]*numberOfArms
 bandit = Bandit(numberOfArms, 0, 1)
 
-def playStationary(numberOfPulls, eps):
-    resetQ()
+def play(numberOfPulls, isStationary = True, eps=0.5, alpha = -1):
+    
+    reset()
+
     cumulativeReward = 0
+    cumulativeOptimalAction = 0
+    
     numberOfPullsArray = [0]*numberOfArms
     for pull in range(numberOfPulls):
 
@@ -24,21 +28,48 @@ def playStationary(numberOfPulls, eps):
             
         #Pull the lever
         reward = bandit.arms[armIndex].pull()
-        cumulativeReward+=reward
         
         #incriment the count of number of times it was used (in case we're using average)
-        numberOfPullsArray[armIndex]+=1
+        numberOfPullsArray[armIndex]+=1        
         
-        Q[armIndex]+= 1/numberOfPullsArray[armIndex]*(reward - Q[armIndex])
-    return cumulativeReward
+        #update statistics
+        cumulativeReward+=reward
+
+        if (armIndex == bandit.bestArm()):
+            cumulativeOptimalAction+=1
         
-def resetQ():
+        #Update the Action values
+        if (alpha==-1):
+            stepSize = 1/numberOfPullsArray[armIndex]
+        else:
+            stepSize = eps
+        
+        Q[armIndex]+= stepSize*(reward - Q[armIndex])
+        
+        if (not isStationary):
+            walkAllArms()
+
+    averageReward = cumulativeReward/numberOfPulls
+    print("==== Average Reward: " + str(averageReward))
+
+    averageOptimalAction = cumulativeOptimalAction/numberOfPulls
+    print("==== Average Optimal Action: " + str(averageOptimalAction))
+
+    return averageReward, averageOptimalAction
+        
+#Change the mean value for each arm by a small amount. Defaulting to 0 with a variance of 0.01
+def walkAllArms(meanWalkLength=0, walkVariance=0.01):
+    for arm in bandit.arms:
+        arm.walk(meanWalkLength, walkVariance)
+        
+def reset():
     Q = [0.0]*numberOfArms
+    bandit = Bandit(numberOfArms, 0, 1)
     
 def MSE():
     error = 0
     for arm in range(numberOfArms):
-        error+=np.square(bandit.arms[arm].meanReturn - Q[arm])
+        error+=np.square(bandit.arms[arm].meanReturn - Q[arm]) / numberOfArms
     return error
     
 def printErrorOfEstimate():
@@ -46,5 +77,19 @@ def printErrorOfEstimate():
         print("Arm actual value: " + str(bandit.arms[arm].meanReturn) + ", estimate: " + str(Q[arm]))
     print("MSE: " + str(MSE()))
         
-#def playNonStationary(numberOfPulls, epsilon):
+def testBestArmThroughWalks(numberOfPulls):
+    print("Beginning tests. Initializing arms")
+    resetQ()
+    i=0
+    for pull in range(numberOfPulls):
+        if (i%1000 ==0):
+            printBestArm()
+        walkAllArms()
+        i+=1
+
+def printBestArm():
+    bestArm = bandit.bestArm()
+    
+    print("Best arm : " + str(bestArm))
+    
     

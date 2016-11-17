@@ -12,6 +12,7 @@ class Arm:
     def walk(self, meanStep, varianceStep):
         walkSize = normal(meanStep,varianceStep)
         self.meanReturn+=walkSize
+        return walkSize
         
     def pull(self):
         rValue = self.meanReturn
