@@ -3,6 +3,9 @@ from pylab import *
 
 """
 Usage:
+#import BanditLearn
+from BanditLearn import *
+
 #Create the BanditLearnAlgorithm / Environment
 algorithm = BanditLearn()
 
