@@ -1,6 +1,22 @@
 from Bandit import *
 from pylab import *
 
+"""
+Usage:
+#Create the BanditLearnAlgorithm / Environment
+algorithm = BanditLearn()
+
+#1000 pulls using a stationary bandit, with 10% exploration, and avergae return for step size:
+algorithm.play(1000, True, 0.1)
+
+#1000 pulls using a Non stationary bandit, with 10% exploration, and avergae return for step size:
+algorithm.play(1000, False, 0.1)
+
+#1000 pulls using a Non stationary bandit, with 10% exploration, and constant step size of 0.2
+algorithm.play(1000, False, 0.1, 0.2)
+
+"""
+
 class BanditLearn:
     def __init__(self):
         self.numberOfArms = 10
