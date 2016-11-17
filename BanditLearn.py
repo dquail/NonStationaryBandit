@@ -32,7 +32,9 @@ class BanditLearn:
         self.reset()
 
         cumulativeReward = 0
+        averageRewardArray = []
         cumulativeOptimalAction = 0
+        optimalActionPctArray = []
     
         numberOfPullsArray = [0]*self.numberOfArms
         for pull in range(numberOfPulls):
@@ -71,13 +73,19 @@ class BanditLearn:
             if (not isStationary):
                 self.walkAllArms()
 
-        averageReward = cumulativeReward/numberOfPulls
+            averageReward = cumulativeReward/numberOfPulls
+            averageRewardArray.append(averageReward)
+
+            averageOptimalAction = cumulativeOptimalAction/numberOfPulls
+            optimalActionPctArray.append(averageOptimalAction)
+            
+        #averageReward = cumulativeReward/numberOfPulls
         print("==== Average Reward: " + str(averageReward))
 
-        averageOptimalAction = cumulativeOptimalAction/numberOfPulls
+        #averageOptimalAction = cumulativeOptimalAction/numberOfPulls
         print("==== Average Optimal Action: " + str(averageOptimalAction))
 
-        return averageReward, averageOptimalAction
+        return averageRewardArray, optimalActionPctArray
         
     #Change the mean value for each arm by a small amount. Defaulting to 0 with a variance of 0.01
     def walkAllArms(self, meanWalkLength=0, walkVariance=0.01):
