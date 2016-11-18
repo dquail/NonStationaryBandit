@@ -1,5 +1,6 @@
 from Bandit import *
 from pylab import *
+import matplotlib.pyplot as plt
 
 """
 Usage:
@@ -10,15 +11,19 @@ from BanditLearn import *
 algorithm = BanditLearn()
 
 #1000 pulls using a stationary bandit, with 10% exploration, and avergae return for step size:
-algorithm.play(1000, True, 0.1)
+algorithm.learn(1000, True, 0.1)
 
 #1000 pulls using a Non stationary bandit, with 10% exploration, and avergae return for step size:
-algorithm.play(1000, False, 0.1)
+algorithm.learn(1000, False, 0.1)
 
 #1000 pulls using a Non stationary bandit, with 10% exploration, and constant step size of 0.2
-algorithm.play(1000, False, 0.1, 0.2)
+algorithm.learn(1000, False, 0.1, 0.2)
+
+#2000 runs of 1000 pulls using a non stationary bandit, with 10% exploration, and constant step size of 0.2
+algorithm.learnMultipleRuns(2000, 1000, False, 0.1, 0.2)
 
 """
+
 
 class BanditLearn:
     def __init__(self):
@@ -27,14 +32,51 @@ class BanditLearn:
         self.Q = [0.0]*self.numberOfArms
         self.bandit = Bandit(self.numberOfArms, 0, 1)
         
-    def play(self, numberOfPulls, isStationary = True, eps=0.5, alpha = -1):
+    def learnMultipleRuns(self, numberOfRuns, numberOfPulls, isStationary = True, eps=0.5, alpha = -1):
+        avgRewardVector = np.array([0.0]*numberOfPulls)
+        optimalActionVector = np.array([0.0]*numberOfPulls)
+        for run in range(numberOfRuns):
+            print("Executing run " + str(run))
+            learnResults = self.learn(numberOfPulls, isStationary, eps, alpha)
+            avgRewardVector+=np.array(learnResults[0])
+            optimalActionVector+=np.array(learnResults[1])
+        avgRewardVector = avgRewardVector/numberOfRuns
+        optimalActionVector = optimalActionVector/numberOfRuns
+        
+        
+        fig = plt.figure()
+        fig.suptitle('Bandit', fontsize = 14, fontweight = 'bold')
+        ax = fig.add_subplot(111)
+
+        titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+        ax.set_title(titleLabel)
+        ax.set_xlabel('Steps')
+        ax.set_ylabel('Average reward')
+        ax.plot(optimalActionVector)
+        plt.show()
+
+        return (avgRewardVector, optimalActionVector)
+            
+    """
+    Returns 2 arrays.
+    - The first array is the rewards received at each time step
+    - The second array contains the optimal action selection. 
+    -- 0 if non optimal
+    -- 1 if optimal action
+    
+    In this way, learn can be called multiple times on multiple bandit test beds to receive
+    the average of returns at each time step as well as the average optimal 
+    """
+    def learn(self, numberOfPulls, isStationary = True, eps=0.5, alpha = -1):
     
         self.reset()
 
         cumulativeReward = 0
         averageRewardArray = []
+        rewardArray = []
         cumulativeOptimalAction = 0
         optimalActionPctArray = []
+        optimalActionArray=[]
     
         numberOfPullsArray = [0]*self.numberOfArms
         for pull in range(numberOfPulls):
@@ -75,6 +117,12 @@ class BanditLearn:
 
             averageReward = cumulativeReward/numberOfPulls
             averageRewardArray.append(averageReward)
+            rewardArray.append(reward)
+            
+            if (armIndex == self.bandit.bestArm()):
+                optimalActionArray.append(1)
+            else:
+                optimalActionArray.append(0)
 
             averageOptimalAction = cumulativeOptimalAction/numberOfPulls
             optimalActionPctArray.append(averageOptimalAction)
@@ -85,7 +133,7 @@ class BanditLearn:
         #averageOptimalAction = cumulativeOptimalAction/numberOfPulls
         print("==== Average Optimal Action: " + str(averageOptimalAction))
 
-        return averageRewardArray, optimalActionPctArray
+        return rewardArray, optimalActionArray
         
     #Change the mean value for each arm by a small amount. Defaulting to 0 with a variance of 0.01
     def walkAllArms(self, meanWalkLength=0, walkVariance=0.01):
