@@ -136,7 +136,7 @@ class BanditLearn:
         return rewardArray, optimalActionArray
         
     #Change the mean value for each arm by a small amount. Defaulting to 0 with a variance of 0.01
-    def walkAllArms(self, meanWalkLength=0, walkVariance=0.01):
+    def walkAllArms(self, meanWalkLength=0, walkVariance=0.1):
         for arm in self.bandit.arms:
             arm.walk(meanWalkLength, walkVariance)
         
