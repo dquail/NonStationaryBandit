@@ -36,7 +36,8 @@ class BanditLearn:
         avgRewardVector = np.array([0.0]*numberOfPulls)
         optimalActionVector = np.array([0.0]*numberOfPulls)
         for run in range(numberOfRuns):
-            print("Executing run " + str(run))
+            if run % 100 == 0:
+                print("Executing run " + str(run))
             learnResults = self.learn(numberOfPulls, isStationary, eps, alpha)
             avgRewardVector+=np.array(learnResults[0])
             optimalActionVector+=np.array(learnResults[1])
@@ -71,11 +72,11 @@ class BanditLearn:
     
         self.reset()
 
-        cumulativeReward = 0
-        averageRewardArray = []
+        #cumulativeReward = 0
+        #averageRewardArray = []
         rewardArray = []
-        cumulativeOptimalAction = 0
-        optimalActionPctArray = []
+        #cumulativeOptimalAction = 0
+        #optimalActionPctArray = []
         optimalActionArray=[]
     
         numberOfPullsArray = [0]*self.numberOfArms
@@ -99,11 +100,12 @@ class BanditLearn:
             numberOfPullsArray[armIndex]+=1        
         
             #update statistics
-            cumulativeReward+=reward
-
+            #cumulativeReward+=reward
+            
+            """
             if (armIndex == self.bandit.bestArm()):
                 cumulativeOptimalAction+=1
-        
+            """
             #Update the Action values
             if (alpha==-1):
                 stepSize = 1/numberOfPullsArray[armIndex]
@@ -115,8 +117,8 @@ class BanditLearn:
             if (not isStationary):
                 self.walkAllArms()
 
-            averageReward = cumulativeReward/numberOfPulls
-            averageRewardArray.append(averageReward)
+            #averageReward = cumulativeReward/numberOfPulls
+            #averageRewardArray.append(averageReward)
             rewardArray.append(reward)
             
             if (armIndex == self.bandit.bestArm()):
@@ -124,14 +126,14 @@ class BanditLearn:
             else:
                 optimalActionArray.append(0)
 
-            averageOptimalAction = cumulativeOptimalAction/numberOfPulls
-            optimalActionPctArray.append(averageOptimalAction)
+            #averageOptimalAction = cumulativeOptimalAction/numberOfPulls
+            #optimalActionPctArray.append(averageOptimalAction)
             
         #averageReward = cumulativeReward/numberOfPulls
-        print("==== Average Reward: " + str(averageReward))
+        #print("==== Average Reward: " + str(averageReward))
 
         #averageOptimalAction = cumulativeOptimalAction/numberOfPulls
-        print("==== Average Optimal Action: " + str(averageOptimalAction))
+        #print("==== Average Optimal Action: " + str(averageOptimalAction))
 
         return rewardArray, optimalActionArray
         
