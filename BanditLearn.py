@@ -11,16 +11,16 @@ from BanditLearn import *
 algorithm = BanditLearn()
 
 #1000 pulls using a stationary bandit, with 10% exploration, and avergae return for step size:
-algorithm.learn(1000, True, 0.1)
+algorithm.epsilonGreedyLearn(1000, True, 0.1)
 
 #1000 pulls using a Non stationary bandit, with 10% exploration, and avergae return for step size:
-algorithm.learn(1000, False, 0.1)
+algorithm.epsilonGreedyLearn(1000, False, 0.1)
 
 #1000 pulls using a Non stationary bandit, with 10% exploration, and constant step size of 0.2
-algorithm.learn(1000, False, 0.1, 0.2)
+algorithm.epsilonGreedyLearn(1000, False, 0.1, 0.2)
 
 #2000 runs of 1000 pulls using a non stationary bandit, with 10% exploration, and constant step size of 0.2
-algorithm.learnMultipleRuns(2000, 1000, False, 0.1, 0.2)
+algorithm.epsilonGreedyLearnMultipleRuns(2000, 1000, False, 0.1, 0.2)
 
 """
 
@@ -31,14 +31,15 @@ class BanditLearn:
 
         self.Q = [0.0]*self.numberOfArms
         self.bandit = Bandit(self.numberOfArms, 0, 1)
-        
-    def learnMultipleRuns(self, numberOfRuns, numberOfPulls, isStationary = True, eps=0.5, alpha = -1):
+
+    def epsilonGreedyLearnMultipleRuns(self, numberOfRuns, numberOfPulls, isStationary = True, eps=0.5, alpha = -1):
         avgRewardVector = np.array([0.0]*numberOfPulls)
         optimalActionVector = np.array([0.0]*numberOfPulls)
         for run in range(numberOfRuns):
             if run % 100 == 0:
                 print("Executing run " + str(run))
-            learnResults = self.learn(numberOfPulls, isStationary, eps, alpha)
+            self.reset()
+            learnResults = self.epsilonGreedyLearn(numberOfPulls, isStationary, eps, alpha)
             avgRewardVector+=np.array(learnResults[0])
             optimalActionVector+=np.array(learnResults[1])
         avgRewardVector = avgRewardVector/numberOfRuns
@@ -57,8 +58,36 @@ class BanditLearn:
         plt.show()
 
         return (avgRewardVector, optimalActionVector)
-            
+
+    def optimisticLearnMultipleRuns(self, numberOfRuns, numberOfPulls, initialEstimates, isStationary=True, eps=0.5, alpha=-1):
+        avgRewardVector = np.array([0.0] * numberOfPulls)
+        optimalActionVector = np.array([0.0] * numberOfPulls)
+        for run in range(numberOfRuns):
+            if run % 100 == 0:
+                print("Executing run " + str(run))
+            self.reset()
+            self.Q = [initialEstimates] * self.numberOfArms
+            learnResults = self.epsilonGreedyLearn(numberOfPulls, isStationary, eps, alpha)
+            avgRewardVector += np.array(learnResults[0])
+            optimalActionVector += np.array(learnResults[1])
+        avgRewardVector = avgRewardVector / numberOfRuns
+        optimalActionVector = optimalActionVector / numberOfRuns
+
+        fig = plt.figure()
+        fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+        ax = fig.add_subplot(111)
+
+        titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+        ax.set_title(titleLabel)
+        ax.set_xlabel('Steps')
+        ax.set_ylabel('Optimal Action')
+        ax.plot(optimalActionVector)
+        plt.show()
+
+        return (avgRewardVector, optimalActionVector)
+
     """
+    In all of the learn functions:
     Returns 2 arrays.
     - The first array is the rewards received at each time step
     - The second array contains the optimal action selection. 
@@ -68,9 +97,7 @@ class BanditLearn:
     In this way, learn can be called multiple times on multiple bandit test beds to receive
     the average of returns at each time step as well as the average optimal 
     """
-    def learn(self, numberOfPulls, isStationary = True, eps=0.5, alpha = -1):
-    
-        self.reset()
+    def epsilonGreedyLearn(self, numberOfPulls, isStationary = True, eps=0.5, alpha = -1):
 
         #cumulativeReward = 0
         #averageRewardArray = []
@@ -137,6 +164,11 @@ class BanditLearn:
 
         return rewardArray, optimalActionArray
         
+
+    """
+    Helper functions
+    """
+
     #Change the mean value for each arm by a small amount. Defaulting to 0 with a variance of 0.01
     def walkAllArms(self, meanWalkLength=0, walkVariance=0.01):
         for arm in self.bandit.arms:
