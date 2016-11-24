@@ -79,7 +79,7 @@ class BanditLearn:
         titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
         ax.set_title(titleLabel)
         ax.set_xlabel('Steps')
-        ax.set_ylabel('Avg reward')
+        ax.set_ylabel('Optimal action %')
         ax.plot(optimalActionVector)
         plt.show()
 
@@ -126,7 +126,7 @@ class BanditLearn:
     the average of returns at each time step as well as the average optimal 
     """
     def epsilonGreedyLearn(self, numberOfPulls, isStationary = True, eps=0.5, alpha = -1, c = -1):
-
+        eachExploreArray = [0] * self.numberOfArms
         #cumulativeReward = 0
         #averageRewardArray = []
         rewardArray = []
@@ -150,13 +150,23 @@ class BanditLearn:
                     #Upper confidence bound action selection
                     #A=argmax(Q(a)+c*(sqrt(log(t)/N(a))
                     A = []
+                    currentBestArm = argmax(self.Q)
                     for i in range(len(self.bandit.arms)):
                         if numberOfPullsArray[i] > 0:
                             val = self.Q[i] + c * np.sqrt((np.log(pull) / numberOfPullsArray[i]))
                         else:
                             val = 0
-                        A.append(val)
+                        if (i == currentBestArm):
+                            #We never want to "explore" the best arm. So set it's A value to very low
+                            A.append(-10000)
+                        else:
+                            A.append(val)
                     armIndex = argmax(A)
+                    eachExploreArray[armIndex]+=1
+                    #Comment below out after testing. With it in place, epsilonGreedy and UCB should be identical
+                    #print("Chose: " + str(armIndex))
+                    #print("Optimal: " + str(self.bandit.bestArm()))
+                    #armIndex = randint(0,self.numberOfArms)
 
             else:
                 #Exploit / Choose the best current action
@@ -203,7 +213,7 @@ class BanditLearn:
 
         #averageOptimalAction = cumulativeOptimalAction/numberOfPulls
         #print("==== Average Optimal Action: " + str(averageOptimalAction))
-
+        #print(eachExploreArray)
         return rewardArray, optimalActionArray
         
 
