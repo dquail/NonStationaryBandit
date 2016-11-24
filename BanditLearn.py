@@ -79,25 +79,38 @@ class BanditLearn:
         titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
         ax.set_title(titleLabel)
         ax.set_xlabel('Steps')
-        ax.set_ylabel('Optimal Action')
+        ax.set_ylabel('Avg reward')
         ax.plot(optimalActionVector)
         plt.show()
 
         return (avgRewardVector, optimalActionVector)
 
-    def optimisticLearnMultipleRuns(self, numberOfRuns, numberOfPulls, initialEstimates, isStationary=True, eps=0.5, alpha=-1):
-        avgRewardVector = np.array([0.0] * numberOfPulls)
-        optimalActionVector = np.array([0.0] * numberOfPulls)
+    def optimisticLearnMultipleRuns(self, numberOfRuns, numberOfPulls, initialEstimates, isStationary=True, alpha=-1):
+        eps = 0.0 #never explores
+        avgRewardVector = np.array([0.0]*numberOfPulls)
+        optimalActionVector = np.array([0.0]*numberOfPulls)
         for run in range(numberOfRuns):
             if run % 100 == 0:
                 print("Executing run " + str(run))
             self.reset()
-            self.Q = [initialEstimates] * self.numberOfArms
+            self.Q = [0.0]*self.numberOfArms            
             learnResults = self.epsilonGreedyLearn(numberOfPulls, isStationary, eps, alpha)
-            avgRewardVector += np.array(learnResults[0])
-            optimalActionVector += np.array(learnResults[1])
-        avgRewardVector = avgRewardVector / numberOfRuns
-        optimalActionVector = optimalActionVector / numberOfRuns
+            avgRewardVector+=np.array(learnResults[0])
+            optimalActionVector+=np.array(learnResults[1])
+        avgRewardVector = avgRewardVector/numberOfRuns
+        optimalActionVector = optimalActionVector/numberOfRuns
+        
+        
+        fig = plt.figure()
+        fig.suptitle('Bandit', fontsize = 14, fontweight = 'bold')
+        ax = fig.add_subplot(111)
+
+        titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+        ax.set_title(titleLabel)
+        ax.set_xlabel('Steps')
+        ax.set_ylabel('Optimal Action')
+        ax.plot(optimalActionVector)
+        plt.show()
 
         return (avgRewardVector, optimalActionVector)
 
@@ -166,7 +179,7 @@ class BanditLearn:
             if (alpha==-1):
                 stepSize = 1/numberOfPullsArray[armIndex]
             else:
-                stepSize = eps
+                stepSize = alpha
         
             self.Q[armIndex]+= stepSize*(reward - self.Q[armIndex])
         
