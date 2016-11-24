@@ -130,14 +130,14 @@ class BanditLearn:
             randomE = random()
             if (randomE < eps):
                 #explore
-                if(not c== -1):
+                if(c == -1):
                     #Simple epsilon greedy selection of exploring action
                     armIndex = randint(0,self.numberOfArms)
                 else:
                     #Upper confidence bound action selection
                     #A=argmax(Q(a)+c*(sqrt(log(t)/N(a))
                     A = []
-                    for i in self.bandit.arms:
+                    for i in range(len(self.bandit.arms)):
                         val = self.Q[i] + c * np.sqrt((np.log(t) / numberOfPullsArray[i]))
                         A.append(val)
                     armIndex = argmax(A)
