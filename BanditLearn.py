@@ -59,6 +59,32 @@ class BanditLearn:
 
         return (avgRewardVector, optimalActionVector)
 
+    def UCBLearnMultipleRuns(self, numberOfRuns, numberOfPulls, isStationary=True, eps=0.5, alpha=-1, c=-1):
+        avgRewardVector = np.array([0.0] * numberOfPulls)
+        optimalActionVector = np.array([0.0] * numberOfPulls)
+        for run in range(numberOfRuns):
+            if run % 100 == 0:
+                print("Executing run " + str(run))
+            self.reset()
+            learnResults = self.epsilonGreedyLearn(numberOfPulls, isStationary, eps, alpha, c)
+            avgRewardVector += np.array(learnResults[0])
+            optimalActionVector += np.array(learnResults[1])
+        avgRewardVector = avgRewardVector / numberOfRuns
+        optimalActionVector = optimalActionVector / numberOfRuns
+
+        fig = plt.figure()
+        fig.suptitle('Bandit', fontsize = 14, fontweight = 'bold')
+        ax = fig.add_subplot(111)
+
+        titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+        ax.set_title(titleLabel)
+        ax.set_xlabel('Steps')
+        ax.set_ylabel('Optimal Action')
+        ax.plot(optimalActionVector)
+        plt.show()
+
+        return (avgRewardVector, optimalActionVector)
+
     def optimisticLearnMultipleRuns(self, numberOfRuns, numberOfPulls, initialEstimates, isStationary=True, eps=0.5, alpha=-1):
         avgRewardVector = np.array([0.0] * numberOfPulls)
         optimalActionVector = np.array([0.0] * numberOfPulls)
@@ -73,17 +99,6 @@ class BanditLearn:
         avgRewardVector = avgRewardVector / numberOfRuns
         optimalActionVector = optimalActionVector / numberOfRuns
 
-        fig = plt.figure()
-        fig.suptitle('Bandit', fontsize=14, fontweight='bold')
-        ax = fig.add_subplot(111)
-
-        titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
-        ax.set_title(titleLabel)
-        ax.set_xlabel('Steps')
-        ax.set_ylabel('Optimal Action')
-        ax.plot(optimalActionVector)
-        plt.show()
-
         return (avgRewardVector, optimalActionVector)
 
     """
@@ -97,7 +112,7 @@ class BanditLearn:
     In this way, learn can be called multiple times on multiple bandit test beds to receive
     the average of returns at each time step as well as the average optimal 
     """
-    def epsilonGreedyLearn(self, numberOfPulls, isStationary = True, eps=0.5, alpha = -1):
+    def epsilonGreedyLearn(self, numberOfPulls, isStationary = True, eps=0.5, alpha = -1, c = -1):
 
         #cumulativeReward = 0
         #averageRewardArray = []
@@ -105,17 +120,28 @@ class BanditLearn:
         #cumulativeOptimalAction = 0
         #optimalActionPctArray = []
         optimalActionArray=[]
-    
+
         numberOfPullsArray = [0]*self.numberOfArms
         for pull in range(numberOfPulls):
 
             #Pick an action/arm to pull
             armIndx = 0
             #Decide to explore vs. Exploit
-            randomE = random()                
+            randomE = random()
             if (randomE < eps):
                 #explore
-                armIndex = randint(0,self.numberOfArms)    
+                if(not c== -1):
+                    #Simple epsilon greedy selection of exploring action
+                    armIndex = randint(0,self.numberOfArms)
+                else:
+                    #Upper confidence bound action selection
+                    #A=argmax(Q(a)+c*(sqrt(log(t)/N(a))
+                    A = []
+                    for i in self.bandit.arms:
+                        val = self.Q[i] + c * np.sqrt((np.log(t) / numberOfPullsArray[i]))
+                        A.append(val)
+                    armIndex = argmax(A)
+
             else:
                 #Exploit / Choose the best current action
                 armIndex= argmax(self.Q)
