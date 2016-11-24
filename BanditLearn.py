@@ -138,7 +138,10 @@ class BanditLearn:
                     #A=argmax(Q(a)+c*(sqrt(log(t)/N(a))
                     A = []
                     for i in range(len(self.bandit.arms)):
-                        val = self.Q[i] + c * np.sqrt((np.log(t) / numberOfPullsArray[i]))
+                        if numberOfPullsArray[i] > 0:
+                            val = self.Q[i] + c * np.sqrt((np.log(pull) / numberOfPullsArray[i]))
+                        else:
+                            val = 0
                         A.append(val)
                     armIndex = argmax(A)
 
