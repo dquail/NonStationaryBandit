@@ -59,7 +59,9 @@ class BanditLearn:
 
         return (avgRewardVector, optimalActionVector)
 
-    def UCBLearnMultipleRuns(self, numberOfRuns, numberOfPulls, isStationary=True, eps=0.5, alpha=-1, c=-1):
+    #def UCBLearnMultipleRuns(self, numberOfRuns, numberOfPulls, isStationary=True, eps=0.5, alpha=-1, c=-1):
+    def UCBLearnMultipleRuns(self, numberOfRuns, numberOfPulls, isStationary=True, alpha=-1, c=-1):      
+  
         avgRewardVector = np.array([0.0] * numberOfPulls)
         optimalActionVector = np.array([0.0] * numberOfPulls)
         for run in range(numberOfRuns):
@@ -67,7 +69,8 @@ class BanditLearn:
                 print("Executing run " + str(run))
             self.reset()
             #def epsilonGreedyLearn(self, numberOfPulls, isStationary = True, eps=0.5, alpha = -1, c = -1):
-            learnResults = self.epsilonGreedyLearn(numberOfPulls, isStationary, eps, alpha, c)
+            #learnResults = self.epsilonGreedyLearn(numberOfPulls, isStationary, eps, alpha, c)
+            learnResults = self.epsilonGreedyLearn(numberOfPulls, isStationary, 1.0, alpha, c)
             avgRewardVector += np.array(learnResults[0])
             optimalActionVector += np.array(learnResults[1])
         avgRewardVector = avgRewardVector / numberOfRuns
@@ -77,11 +80,11 @@ class BanditLearn:
         fig.suptitle('Bandit', fontsize = 14, fontweight = 'bold')
         ax = fig.add_subplot(111)
 
-        titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+        titleLabel = "Stationary: " + str(isStationary) + ", alpha:" + str(alpha)
         ax.set_title(titleLabel)
         ax.set_xlabel('Steps')
         ax.set_ylabel('Optimal action %')
-        ax.plot(avgRewardVector)
+        ax.plot(optimalActionVector)
         plt.show()
 
         return (avgRewardVector, optimalActionVector)
@@ -158,7 +161,8 @@ class BanditLearn:
                         else:
                             #We want this to be a maximizing action
                             val = 10000 
-                        if (i == currentBestArm):
+                        #if (i == currentBestArm):
+                        if(False):
                             #We never want to "explore" the best arm. So set it's A value to very low
                             A.append(-10000)
                         else:
