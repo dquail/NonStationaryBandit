@@ -155,7 +155,8 @@ class BanditLearn:
                         if numberOfPullsArray[i] > 0:
                             val = self.Q[i] + c * np.sqrt((np.log(pull) / numberOfPullsArray[i]))
                         else:
-                            val = 0
+                            #We want this to be a maximizing action
+                            val = 10000 
                         if (i == currentBestArm):
                             #We never want to "explore" the best arm. So set it's A value to very low
                             A.append(-10000)
