@@ -66,6 +66,7 @@ class BanditLearn:
             if run % 100 == 0:
                 print("Executing run " + str(run))
             self.reset()
+            #def epsilonGreedyLearn(self, numberOfPulls, isStationary = True, eps=0.5, alpha = -1, c = -1):
             learnResults = self.epsilonGreedyLearn(numberOfPulls, isStationary, eps, alpha, c)
             avgRewardVector += np.array(learnResults[0])
             optimalActionVector += np.array(learnResults[1])
@@ -164,6 +165,7 @@ class BanditLearn:
                             A.append(val)
                     armIndex = argmax(A)
                     #print("Experimenting arm: " + str(armIndex))
+                    #print("A: " + str(A))
                     #eachExploreArray[armIndex]+=1
                     #print("Arm explore array: ")
                     #print(eachExploreArray)
