@@ -80,7 +80,7 @@ class BanditLearn:
         ax.set_title(titleLabel)
         ax.set_xlabel('Steps')
         ax.set_ylabel('Optimal action %')
-        ax.plot(optimalActionVector)
+        ax.plot(avgRewardVector)
         plt.show()
 
         return (avgRewardVector, optimalActionVector)
@@ -93,7 +93,7 @@ class BanditLearn:
             if run % 100 == 0:
                 print("Executing run " + str(run))
             self.reset()
-            self.Q = [0.0]*self.numberOfArms            
+            self.Q = [initialEstimates]*self.numberOfArms            
             learnResults = self.epsilonGreedyLearn(numberOfPulls, isStationary, eps, alpha)
             avgRewardVector+=np.array(learnResults[0])
             optimalActionVector+=np.array(learnResults[1])
@@ -136,7 +136,7 @@ class BanditLearn:
 
         numberOfPullsArray = [0]*self.numberOfArms
         for pull in range(numberOfPulls):
-
+            #print("Q: " + str(self.Q))
             #Pick an action/arm to pull
             armIndx = 0
             #Decide to explore vs. Exploit
@@ -163,7 +163,12 @@ class BanditLearn:
                         else:
                             A.append(val)
                     armIndex = argmax(A)
-                    eachExploreArray[armIndex]+=1
+                    #print("Experimenting arm: " + str(armIndex))
+                    #eachExploreArray[armIndex]+=1
+                    #print("Arm explore array: ")
+                    #print(eachExploreArray)
+                    #print("Arm pull array: ")
+                    #print(numberOfPullsArray)
                     #Comment below out after testing. With it in place, epsilonGreedy and UCB should be identical
                     #print("Chose: " + str(armIndex))
                     #print("Optimal: " + str(self.bandit.bestArm()))
@@ -172,6 +177,7 @@ class BanditLearn:
             else:
                 #Exploit / Choose the best current action
                 armIndex= argmax(self.Q)
+                #print("Exploiting:" + str(armIndex))
             
             #Pull the lever
             reward = self.bandit.arms[armIndex].pull()
