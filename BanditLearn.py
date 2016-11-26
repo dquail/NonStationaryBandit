@@ -231,7 +231,6 @@ class BanditLearn:
                     """
                     #armIndex = randint(0,numberOfArms)
                     armIndex = np.random.choice(np.arange(0, self.numberOfArms), p=policyArray)
-                    H[armIndex] += 0.01
                     
                 else:
                     #Eps greedy
