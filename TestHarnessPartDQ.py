@@ -1,6 +1,7 @@
 from EpsilonGreedy import *
 from OptimisticGreedy import *
 from UCB import *
+from Gradient import *
 
 def run():
 
@@ -19,29 +20,34 @@ def run():
     """
     algorithms = []
     
-    #initialize Epsilon Greedy algorithm
+    #Epsilon Greedy algorithm
     alpha = 0.1
     epsilon = 0.1
     epsilonGreedy = EpsilonGreedy(bandit, alpha, epsilon)
     #algorithms.append(epsilonGreedy)
     
-    #epsilon greedy with different parameters
+    #Epsilon greedy with different parameters
     alpha = 0.05
     epsilon = 0.4
     epsilonGreedy2 = EpsilonGreedy(bandit, alpha, epsilon)
     #algorithms.append(epsilonGreedy2)
     
-    #optimistic greedy
+    #Optimistic greedy
     alpha = 0.1
     initialValues = 5
     optimisticGreedy = OptimisticGreedy(bandit, initialValues, alpha)
-    algorithms.append(optimisticGreedy)
+    #algorithms.append(optimisticGreedy)
 
-    #ucb
+    #UCB
     alpha = 0.1
     c = 2
     ucb = UCB(bandit, c, alpha)
-    algorithms.append(ucb)
+    #algorithms.append(ucb)
+    
+    #Gradient
+    alpha = 0.1
+    gradient = Gradient(bandit, alpha)
+    algorithms.append(gradient)
     
     """
     Step 4: Run the tests
@@ -52,12 +58,12 @@ def run():
     Step 5: Analyze the results
     """
     rewardsDict = results['rewards']
-    rewards = rewardsDict[ucb]
+    rewards = rewardsDict[gradient]
 
     #print("Rewards: ") 
     #print(rewards)
     optimalActionsDict = results['optimalActions']
-    optimalActions = optimalActionsDict[ucb]
+    optimalActions = optimalActionsDict[gradient]
 
     averageReward = np.sum(rewards) / pulls
     pctCorrect = np.sum(optimalActions) / pulls
