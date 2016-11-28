@@ -1,4 +1,5 @@
 from EpsilonGreedy import *
+from OptimisticGreedy import *
 
 def run():
 
@@ -15,13 +16,25 @@ def run():
     """
     Step 2: Initialize all of the algorithms you wish to test
     """
+    algorithms = []
+    
     #initialize Epsilon Greedy algorithm
     alpha = 0.1
     epsilon = 0.1
     epsilonGreedy = EpsilonGreedy(bandit, alpha, epsilon)
-
-    algorithms = []
-    algorithms.append(epsilonGreedy)
+    #algorithms.append(epsilonGreedy)
+    
+    #epsilon greedy with different parameters
+    alpha = 0.05
+    epsilon = 0.4
+    epsilonGreedy2 = EpsilonGreedy(bandit, alpha, epsilon)
+    #algorithms.append(epsilonGreedy2)
+    
+    #optimistic greedy
+    alpha = 0.1
+    initialValues = 5
+    optimisticGreedy = OptimisticGreedy(bandit, initialValues, alpha)
+    algorithms.append(optimisticGreedy)
 
     """
     Step 4: Run the tests
@@ -31,12 +44,13 @@ def run():
     """
     Step 5: Analyze the results
     """
-    rewardsDict = results[0]
-    rewards = rewardsDict[epsilonGreedy]
+    rewardsDict = results['rewards']
+    rewards = rewardsDict[optimisticGreedy]
+
     #print("Rewards: ") 
     #print(rewards)
-    optimalActionsDict = results[1]
-    optimalActions = optimalActionsDict[epsilonGreedy]
+    optimalActionsDict = results['optimalActions']
+    optimalActions = optimalActionsDict[optimisticGreedy]
 
     averageReward = np.sum(rewards) / pulls
     pctCorrect = np.sum(optimalActions) / pulls
@@ -79,7 +93,7 @@ def testAlgorithms(bandit, algorithms, numberOfPulls, numberOfRuns, isStationary
 
 
     for run in range(numberOfRuns):
-        if run % 200 == 0:
+        if run % 100 == 0:
             print("Executing run " + str(run) + " ... ")
         #print("++++++++++++++ Run ++++++++++++++ ")
         for pull in range(numberOfPulls):
@@ -124,7 +138,7 @@ def testAlgorithms(bandit, algorithms, numberOfPulls, numberOfRuns, isStationary
                 
 
     #return the dictionaries of learning results as a tuple
-    return(algorithmRewards, algorithmOptimals)
+    return({'rewards': algorithmRewards, 'optimalActions':algorithmOptimals})
 
     
 """
