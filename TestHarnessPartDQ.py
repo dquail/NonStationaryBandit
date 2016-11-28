@@ -2,14 +2,19 @@ from EpsilonGreedy import *
 
 def run():
 
+    """
+    Step 1: Initialize the environment
+    """
     #Initialize bandit
     bandit = Bandit(10,0,1)
-
-    #initialize test environment
-    pulls = 1000
-    runs = 2000
     stationary = True
 
+    pulls = 1000
+    runs = 2000
+
+    """
+    Step 2: Initialize all of the algorithms you wish to test
+    """
     #initialize Epsilon Greedy algorithm
     alpha = 0.1
     epsilon = 0.1
@@ -18,8 +23,14 @@ def run():
     algorithms = []
     algorithms.append(epsilonGreedy)
 
+    """
+    Step 4: Run the tests
+    """
     results = testAlgorithms(bandit, algorithms, pulls, runs, stationary)
 
+    """
+    Step 5: Analyze the results
+    """
     rewardsDict = results[0]
     rewards = rewardsDict[epsilonGreedy]
     #print("Rewards: ") 
