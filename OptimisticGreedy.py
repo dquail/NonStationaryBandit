@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 class OptimisticGreedy:
     #eps of -1 will use an average reward (1/n) rathr than a constant step size
     def __init__(self, bandit, initialValues, alpha):
+        self.name = "Optimistic Greedy"
         self.bandit = bandit
         self.numberOfArms = len(self.bandit.arms)
         self.numberOfPullsArray = [0]*self.numberOfArms
@@ -23,14 +24,7 @@ class OptimisticGreedy:
         else:
             stepSize = self.alpha
 
-        #do the learning        
-        #print("Learning with reward: " + str(reward) + " armIndex: " + str(armIndex))
-        #print("Q before learning: ")
-        #print(self.Q)
         self.Q[armIndex]+= stepSize*(reward - self.Q[armIndex])
-        #print("Q after learning: ")
-        #print(self.Q)        
-
         
         
     def policy(self):

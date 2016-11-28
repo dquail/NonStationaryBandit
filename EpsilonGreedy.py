@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 class EpsilonGreedy:
     #eps of -1 will use an average reward (1/n) rathr than a constant step size
     def __init__(self, bandit, alpha, eps):
+        self.name = "Epsilon Greedy"
         self.bandit = bandit
         self.numberOfArms = len(self.bandit.arms)
         self.numberOfPullsArray = [0]*self.numberOfArms
@@ -18,14 +19,14 @@ class EpsilonGreedy:
         #Update the Action values
         self.numberOfPullsArray[armIndex]+=1
 
-        if (self.alpha==-1):
+        if (self.alpha ==-1):
             stepSize = 1/self.numberOfPullsArray[armIndex]
         else:
             stepSize = self.alpha
+        
 
         #do the learning        
-        self.Q[armIndex]+= stepSize*(reward - self.Q[armIndex])
-      
+        self.Q[armIndex]+= stepSize*(reward - self.Q[armIndex])      
         
     def policy(self):
         armIndex = 0            

@@ -2,18 +2,166 @@ from EpsilonGreedy import *
 from OptimisticGreedy import *
 from UCB import *
 from Gradient import *
+def testUCB(runs, pulls, stationary, c, alpha):
+    """
+    Step 1: Initialize the environment
+    """
+    #Initialize bandit
+    bandit = Bandit(10,0,1)
 
-def run():
+    """
+    Step 2: Initialize all of the algorithms you wish to test
+    """
+    algorithms = []
+    
+    #Gradient algorithm
+    gradient = UCB(bandit, c, alpha)
+    algorithms.append(gradient)
+        
+    """
+    Step 4: Run the tests
+    """
+    results = testAlgorithms(bandit, algorithms, pulls, runs, stationary)
+
+    """
+    Step 5: Analyze the results
+    """
+    rewardsDictionaryOfAllAlgorithms = results['rewards']
+    optimalActionsDictionaryOfAllAlgorithms = results['optimalActions']
+
+    for algorithm in algorithms:
+        rewards = rewardsDictionaryOfAllAlgorithms[algorithm]     
+        optimalActions = optimalActionsDictionaryOfAllAlgorithms[algorithm]
+        averageReward = np.sum(rewards) / pulls
+        pctCorrect = np.sum(optimalActions) / pulls
+        print("Algorithm name: " + algorithm.name)
+        print("pct correct: " + str(pctCorrect))
+        print("avg reward: " + str(averageReward))
+        
+    
+        fig = plt.figure(1)
+        fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+        ax = fig.add_subplot(211)
+        #titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+        #titleLabel = "Average Return Over 2000 Bandits with 1000 pulls each"
+        #ax.set_title(titleLabel)
+        ax.set_xlabel('Initial')
+        ax.set_ylabel('Pct Correct')
+
+        ax.plot(optimalActions)
+        plt.show()
+    
+    
+def testGradient(runs, pulls, stationary, alpha):
+    """
+    Step 1: Initialize the environment
+    """
+    #Initialize bandit
+    bandit = Bandit(10,0,1)
+
+    """
+    Step 2: Initialize all of the algorithms you wish to test
+    """
+    algorithms = []
+    
+    #Gradient algorithm
+    gradient = Gradient(bandit, alpha)
+    algorithms.append(gradient)
+        
+    """
+    Step 4: Run the tests
+    """
+    results = testAlgorithms(bandit, algorithms, pulls, runs, stationary)
+
+    """
+    Step 5: Analyze the results
+    """
+    rewardsDictionaryOfAllAlgorithms = results['rewards']
+    optimalActionsDictionaryOfAllAlgorithms = results['optimalActions']
+
+    for algorithm in algorithms:
+        rewards = rewardsDictionaryOfAllAlgorithms[algorithm]     
+        optimalActions = optimalActionsDictionaryOfAllAlgorithms[algorithm]
+        averageReward = np.sum(rewards) / pulls
+        pctCorrect = np.sum(optimalActions) / pulls
+        print("Algorithm name: " + algorithm.name)
+        print("pct correct: " + str(pctCorrect))
+        print("avg reward: " + str(averageReward))
+        
+    
+        fig = plt.figure(1)
+        fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+        ax = fig.add_subplot(211)
+        #titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+        #titleLabel = "Average Return Over 2000 Bandits with 1000 pulls each"
+        #ax.set_title(titleLabel)
+        ax.set_xlabel('Initial')
+        ax.set_ylabel('Pct Correct')
+
+        ax.plot(optimalActions)
+        plt.show()
+    
+def testEpsilonGreedy(runs, pulls, stationary, alpha, epsilon):
+    """
+    Step 1: Initialize the environment
+    """
+    #Initialize bandit
+    bandit = Bandit(10,0,1)
+
+    """
+    Step 2: Initialize all of the algorithms you wish to test
+    """
+    algorithms = []
+    
+    #Epsilon Greedy algorithm
+    epsilonGreedy = EpsilonGreedy(bandit, alpha, epsilon)
+    algorithms.append(epsilonGreedy)
+        
+    """
+    Step 4: Run the tests
+    """
+    results = testAlgorithms(bandit, algorithms, pulls, runs, stationary)
+
+    """
+    Step 5: Analyze the results
+    """
+    rewardsDictionaryOfAllAlgorithms = results['rewards']
+    optimalActionsDictionaryOfAllAlgorithms = results['optimalActions']
+
+    for algorithm in algorithms:
+        rewards = rewardsDictionaryOfAllAlgorithms[algorithm]     
+        optimalActions = optimalActionsDictionaryOfAllAlgorithms[algorithm]
+        averageReward = np.sum(rewards) / pulls
+        pctCorrect = np.sum(optimalActions) / pulls
+        print("Algorithm name: " + algorithm.name)
+        print("pct correct: " + str(pctCorrect))
+        print("avg reward: " + str(averageReward))
+        
+    
+        fig = plt.figure(1)
+        fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+        ax = fig.add_subplot(211)
+        #titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+        #titleLabel = "Average Return Over 2000 Bandits with 1000 pulls each"
+        #ax.set_title(titleLabel)
+        ax.set_xlabel('Initial')
+        ax.set_ylabel('Pct Correct')
+
+        ax.plot(optimalActions)
+        plt.show()
+    
+    
+def runAllAgorithms():
 
     """
     Step 1: Initialize the environment
     """
     #Initialize bandit
     bandit = Bandit(10,0,1)
-    stationary = True
+    stationary = False
 
-    pulls = 1000
-    runs = 2000
+    pulls = 2000
+    runs = 50
 
     """
     Step 2: Initialize all of the algorithms you wish to test
@@ -24,25 +172,25 @@ def run():
     alpha = 0.1
     epsilon = 0.1
     epsilonGreedy = EpsilonGreedy(bandit, alpha, epsilon)
-    #algorithms.append(epsilonGreedy)
+    algorithms.append(epsilonGreedy)
     
     #Epsilon greedy with different parameters
     alpha = 0.05
     epsilon = 0.4
     epsilonGreedy2 = EpsilonGreedy(bandit, alpha, epsilon)
-    #algorithms.append(epsilonGreedy2)
+    algorithms.append(epsilonGreedy2)
     
     #Optimistic greedy
     alpha = 0.1
     initialValues = 5
     optimisticGreedy = OptimisticGreedy(bandit, initialValues, alpha)
-    #algorithms.append(optimisticGreedy)
+    algorithms.append(optimisticGreedy)
 
     #UCB
     alpha = 0.1
     c = 2
     ucb = UCB(bandit, c, alpha)
-    #algorithms.append(ucb)
+    algorithms.append(ucb)
     
     #Gradient
     alpha = 0.1
@@ -57,34 +205,31 @@ def run():
     """
     Step 5: Analyze the results
     """
-    rewardsDict = results['rewards']
-    rewards = rewardsDict[gradient]
+    rewardsDictionaryOfAllAlgorithms = results['rewards']
+    optimalActionsDictionaryOfAllAlgorithms = results['optimalActions']
 
-    #print("Rewards: ") 
-    #print(rewards)
-    optimalActionsDict = results['optimalActions']
-    optimalActions = optimalActionsDict[gradient]
+    for algorithm in algorithms:
+        rewards = rewardsDictionaryOfAllAlgorithms[algorithm]     
+        optimalActions = optimalActionsDictionaryOfAllAlgorithms[algorithm]
+        averageReward = np.sum(rewards) / pulls
+        pctCorrect = np.sum(optimalActions) / pulls
+        print("Algorithm name: " + algorithm.name)
+        print("pct correct: " + str(pctCorrect))
+        print("avg reward: " + str(averageReward))
+        
+        """
+        fig = plt.figure(1)
+        fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+        ax = fig.add_subplot(211)
+        #titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+        #titleLabel = "Average Return Over 2000 Bandits with 1000 pulls each"
+        #ax.set_title(titleLabel)
+        ax.set_xlabel('Initial')
+        ax.set_ylabel('Pct Correct')
 
-    averageReward = np.sum(rewards) / pulls
-    pctCorrect = np.sum(optimalActions) / pulls
-
-    print("pct correct: " + str(pctCorrect))
-    print("avg reward: " + str(averageReward))
-    print("Q: " + str(epsilonGreedy.Q))
-
-    fig = plt.figure(1)
-    fig.suptitle('Bandit', fontsize=14, fontweight='bold')
-    ax = fig.add_subplot(211)
-    #titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
-    #titleLabel = "Average Return Over 2000 Bandits with 1000 pulls each"
-    #ax.set_title(titleLabel)
-    ax.set_xlabel('Initial')
-    ax.set_ylabel('Pct Correct')
-
-    ax.plot(optimalActions)
-    plt.show()
-
-
+        ax.plot(optimalActions)
+        plt.show()
+        """
 
 def testAlgorithms(bandit, algorithms, numberOfPulls, numberOfRuns, isStationary):
     #Set up the structures for storing the algorithms results
@@ -106,7 +251,9 @@ def testAlgorithms(bandit, algorithms, numberOfPulls, numberOfRuns, isStationary
 
 
     for run in range(numberOfRuns):
-        if run % 100 == 0:
+        for algorithm in algorithms:
+            algorithm.reset()        
+        if run % 1 == 0:
             print("Executing run " + str(run) + " ... ")
         #print("++++++++++++++ Run ++++++++++++++ ")
         for pull in range(numberOfPulls):
@@ -144,11 +291,11 @@ def testAlgorithms(bandit, algorithms, numberOfPulls, numberOfRuns, isStationary
             
         #Finished the run, Reset to a new bandit.
         bandit.reset()
-        
+        """
         #Reset each algorithm (the Q values etc.)
         for algorithm in algorithms:
             algorithm.reset()
-                
+        """
 
     #return the dictionaries of learning results as a tuple
     return({'rewards': algorithmRewards, 'optimalActions':algorithmOptimals})

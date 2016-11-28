@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 class Gradient:
     #eps of -1 will use an average reward (1/n) rathr than a constant step size
     def __init__(self, bandit, alpha):
+        self.name = "Gradient"
         self.bandit = bandit
         self.numberOfArms = len(self.bandit.arms)
         self.numberOfPullsArray = [0]*self.numberOfArms
@@ -40,17 +41,7 @@ class Gradient:
             #print("Denom: " + str(gradientPolicyDenomonator))
         for j in range(self.numberOfArms):
             self.policyArray[j] = np.exp(self.H[j]) / gradientPolicyDenomonator
-        """
-        print("H array: ")
-        print (H)
-        print("Den: " + str(gradientPolicyDenomonator))
-        print("Policy array:")
-        print(policyArray)
-        print("Sum of policy array:")
-        print(str(np.sum(policyArray)))
-        print("======= Pull " + str(pull))
-        """
-        #armIndex = randint(0,numberOfArms)
+
         armIndex = np.random.choice(np.arange(0, self.numberOfArms), p=self.policyArray)
         
         return armIndex
