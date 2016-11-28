@@ -217,6 +217,7 @@ class BanditLearn:
                     gradientPolicyDenomonator = 0
                     for j in range(self.numberOfArms):
                         gradientPolicyDenomonator+=np.exp(H[j])
+                        print("Denom: " + str(gradientPolicyDenomonator))
                     for j in range(self.numberOfArms):
                         policyArray[j] = np.exp(H[j]) / gradientPolicyDenomonator
                     """
@@ -258,8 +259,11 @@ class BanditLearn:
                 for i in range(self.numberOfArms):
                     if (not i == armIndex):
                         H[i]-= alpha *(reward - averageReward)*(policyArray[i])
-                H[armIndex]+= alpha * (reward - averageReward)*(1 - policyArray[i])
-                
+                    else: 
+                        H[i]+= alpha * (reward - averageReward)*(1 - policyArray[i])
+                print("H:" )
+                print(H)
+
             """
             if (armIndex == self.bandit.bestArm()):
                 cumulativeOptimalAction+=1

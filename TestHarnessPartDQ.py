@@ -1,7 +1,122 @@
-from BanditLearn import *
+from EpsilonGreedy import *
+
+def run():
+
+    #Initialize bandit
+    bandit = Bandit(10,0,1)
+
+    #initialize test environment
+    pulls = 1000
+    runs = 2000
+    stationary = True
+
+    #initialize Epsilon Greedy algorithm
+    alpha = 0.1
+    epsilon = 0.1
+    epsilonGreedy = EpsilonGreedy(bandit, alpha, epsilon)
+
+    algorithms = []
+    algorithms.append(epsilonGreedy)
+
+    results = testAlgorithms(bandit, algorithms, pulls, runs, stationary)
+
+    rewardsDict = results[0]
+    rewards = rewardsDict[epsilonGreedy]
+    #print("Rewards: ") 
+    #print(rewards)
+    optimalActionsDict = results[1]
+    optimalActions = optimalActionsDict[epsilonGreedy]
+
+    averageReward = np.sum(rewards) / pulls
+    pctCorrect = np.sum(optimalActions) / pulls
+
+    print("pct correct: " + str(pctCorrect))
+    print("avg reward: " + str(averageReward))
+    print("Q: " + str(epsilonGreedy.Q))
+
+    fig = plt.figure(1)
+    fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+    ax = fig.add_subplot(211)
+    #titleLabel = "Stationary: " + str(isStationary) + ", eps:" + str(eps) + ", alpha:" + str(alpha)
+    #titleLabel = "Average Return Over 2000 Bandits with 1000 pulls each"
+    #ax.set_title(titleLabel)
+    ax.set_xlabel('Initial')
+    ax.set_ylabel('Pct Correct')
+
+    ax.plot(optimalActions)
+    plt.show()
 
 
-tb = BanditLearn()
+
+def testAlgorithms(bandit, algorithms, numberOfPulls, numberOfRuns, isStationary):
+    #Set up the structures for storing the algorithms results
+    
+    #Dictionary: Keys are the algorithm object. Value is an array of rewards for 
+    #each pull 0->numberOfPulls, averaged over numberOfRuns
+    algorithmRewards = {}
+    
+    #Dictionary: Keys are the algorithm object. Value is an array of %'s where 
+    #optimal action was taken for each pull 0->numberOfPulls, averaged over numberOfRuns
+    algorithmOptimals = {}
+
+    for algorithm in algorithms:
+        returns = [0.0]*numberOfPulls
+        algorithmRewards[algorithm] = returns
+    
+        optimals = [0.0]*numberOfPulls
+        algorithmOptimals[algorithm] = optimals
+
+
+    for run in range(numberOfRuns):
+        if run % 200 == 0:
+            print("Executing run " + str(run) + " ... ")
+        #print("++++++++++++++ Run ++++++++++++++ ")
+        for pull in range(numberOfPulls):
+            for algorithm in algorithms:
+                #ask algorithm for the arm it should pull
+                arm = algorithm.policy()
+                #print("Arm: " + str(arm))    
+                #pull the arm and collect the reward
+                reward = bandit.pull(arm)
+                #print("Reward: " + str(reward))
+                #allow the algorithm to learn based on result of the arm
+                algorithm.learn(reward, arm)
+                
+                #update the statistics for the algorithm
+                rewardArray = algorithmRewards[algorithm]
+                optimalActionArray = algorithmOptimals[algorithm]
+                optimalAction = 0
+                
+                stepSize = 1/(run+1)                
+                if (arm == algorithm.bandit.bestArm()):
+                    optimalAction = 1
+                else:
+                    optimalAction = 0
+        
+                #print("Step size: " + str(stepSize))
+                #print("Before update: " + str(rewardArray[pull]))
+                rewardArray[pull]+=stepSize*(reward - rewardArray[pull])
+                #print("After update: " + str(rewardArray[pull]))
+                                
+                optimalActionArray[pull]+=stepSize*(optimalAction - optimalActionArray[pull])
+                    
+                #Walk the bandit if necessary
+                if (not isStationary):
+                    bandit.walk()
+            
+        #Finished the run, Reset to a new bandit.
+        bandit.reset()
+        
+        #Reset each algorithm (the Q values etc.)
+        for algorithm in algorithms:
+            algorithm.reset()
+                
+
+    #return the dictionaries of learning results as a tuple
+    return(algorithmRewards, algorithmOptimals)
+
+    
+"""
 # epsilonGreedyLearnMultipleRuns(self, numberOfRuns, numberOfPulls, isStationary=True, eps=0.5, alpha=-1):
 
 returnResults = []
@@ -36,7 +151,7 @@ ax.set_ylabel('Average Reward')
 for i in range(0, len(initialValues)):
     ax.plot(initialValues[i], returnResults[i], label="1/n (Stat.)")
 """
-plt.legend(bbox_to_anchor=(1, 1), loc=2, borderaxespad=0.)
-ax.set_xticks(epsValues[0:6])
 """
 plt.show()
+
+"""
