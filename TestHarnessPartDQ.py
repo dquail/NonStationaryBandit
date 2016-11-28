@@ -1,5 +1,6 @@
 from EpsilonGreedy import *
 from OptimisticGreedy import *
+from UCB import *
 
 def run():
 
@@ -36,6 +37,12 @@ def run():
     optimisticGreedy = OptimisticGreedy(bandit, initialValues, alpha)
     algorithms.append(optimisticGreedy)
 
+    #ucb
+    alpha = 0.1
+    c = 2
+    ucb = UCB(bandit, c, alpha)
+    algorithms.append(ucb)
+    
     """
     Step 4: Run the tests
     """
@@ -45,12 +52,12 @@ def run():
     Step 5: Analyze the results
     """
     rewardsDict = results['rewards']
-    rewards = rewardsDict[optimisticGreedy]
+    rewards = rewardsDict[ucb]
 
     #print("Rewards: ") 
     #print(rewards)
     optimalActionsDict = results['optimalActions']
-    optimalActions = optimalActionsDict[optimisticGreedy]
+    optimalActions = optimalActionsDict[ucb]
 
     averageReward = np.sum(rewards) / pulls
     pctCorrect = np.sum(optimalActions) / pulls

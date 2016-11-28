@@ -19,7 +19,7 @@ class EpsilonGreedy:
         self.numberOfPullsArray[armIndex]+=1
 
         if (self.alpha==-1):
-            stepSize = 1/numberOfPullsArray[armIndex]
+            stepSize = 1/self.numberOfPullsArray[armIndex]
         else:
             stepSize = self.alpha
 
