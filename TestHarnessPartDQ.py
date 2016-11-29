@@ -91,6 +91,7 @@ def testAllAlgorithms():
     bandit = Bandit(10,0,1)
     stationary = False
 
+    #TODO - Enter the actual number of pulls and runs we want to do for testing.
     pulls = 100
     runs = 10
 
