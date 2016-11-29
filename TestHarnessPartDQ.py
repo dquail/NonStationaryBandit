@@ -100,7 +100,8 @@ def testAllAlgorithms():
     algorithms = []
     
     #Epsilon Greedy algorithms
-    
+
+    #TODO - Enter the actial epsilons we want to test
     epsilons = [0.5, 0.1, 0.15, 0.2]
     greedyAlgorithms = []
     alpha = 0.1
@@ -110,6 +111,7 @@ def testAllAlgorithms():
         greedyAlgorithms.append(epsilonGreedy)
         
     #Optimistic greedy
+    #TODO - Enter teh actual initial values we want to test
     initialValues = [1, 2, 3, 4, 5]
     optimisticAlgorithms = []
     alpha = 0.1
@@ -120,6 +122,7 @@ def testAllAlgorithms():
         
     #UCB
     alpha = 0.1
+    #TODO - Enter the actual c values we want to test
     cValues = [1, 2, 3, 4]
     ucbAlgorithms = []
     for c in cValues:
@@ -128,6 +131,7 @@ def testAllAlgorithms():
         ucbAlgorithms.append(ucb)
         
     #Gradient
+    #TODO - Enter teh actual alpha values we want to test
     alphas = [0.05, 0.1, 0.15, 0.2]
     gradientAlgorithms = []
     for alpha in alphas:
