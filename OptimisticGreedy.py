@@ -17,6 +17,7 @@ class OptimisticGreedy:
         
     def learn(self, reward, armIndex):
         #Update the Action values
+
         self.numberOfPullsArray[armIndex]+=1
 
         if (self.alpha==-1):
