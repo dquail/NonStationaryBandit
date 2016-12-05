@@ -23,6 +23,7 @@ def testUCB(runs, pulls, stationary, c, alpha):
 
     #Analyze results
     plotAlgorithmOptimalActions(results = results, algorithm = ucb, stationary = stationary, c=c)
+    return results
     
     
 def testGradient(runs, pulls, stationary, alpha):
@@ -42,7 +43,9 @@ def testGradient(runs, pulls, stationary, alpha):
 
     #Analyze results
     plotAlgorithmOptimalActions(results=results,algorithm=gradient, stationary=stationary,alpha=alpha)
-
+    
+    return results
+    
 def testEpsilonGreedy(runs, pulls, stationary, alpha, epsilon):
 
     #Initialize bandit
@@ -61,6 +64,8 @@ def testEpsilonGreedy(runs, pulls, stationary, alpha, epsilon):
     #Analyze results
     plotAlgorithmOptimalActions(results=results, algorithm=epsilonGreedy, stationary=stationary, alpha=alpha, eps=epsilon)       
     
+    return results
+    
 def testOptimistic(runs, pulls, stationary, alpha, initialValues):
 
     #Initialize bandit
@@ -78,6 +83,7 @@ def testOptimistic(runs, pulls, stationary, alpha, initialValues):
 
     #Analyze results
     plotAlgorithmOptimalActions(results=results, algorithm=optimistic, stationary=stationary, alpha=alpha, initialValues = initialValues)       
+    return results
     
 """
 Function to test several different algorithms using the same bandit
@@ -92,7 +98,7 @@ def testAllAlgorithms():
     stationary = False
 
     #TODO - Enter the actual number of pulls and runs we want to do for testing.
-    pulls = 1000
+    pulls = 100000
     runs = 100
 
     """
