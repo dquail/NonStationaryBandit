@@ -13,7 +13,7 @@ class Bandit:
             armRealMean = normal(armMean, variance)
             arm = Arm(armRealMean, variance)
             self.arms.append(arm)
-        
+        self.bestArm = self.calculateBestArm()
                 
     def reset(self):
         self.arms = []
@@ -21,11 +21,13 @@ class Bandit:
             armRealMean = normal(self.armMean, self.variance)
             arm = Arm(armRealMean, self.variance)
             self.arms.append(arm)
+        self.bestArm = self.calculateBestArm()
         
     def walk(self, meanStep = 0, varianceStep = 0.01):
         for arm in self.arms:
             arm.walk(meanStep, varianceStep)
-
+        self.bestArm = self.calculateBestArm()
+        
     def printBandit(self):
         i = 0
         for arm in self.arms:
@@ -36,7 +38,8 @@ class Bandit:
     def pull(self, armIndex):
         return self.arms[armIndex].pull()
         
-    def bestArm(self):
+    
+    def calculateBestArm(self):
         armMeanValues = []
         for arm in self.arms:
             armMeanValues.append(arm.meanReturn)

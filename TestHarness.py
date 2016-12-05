@@ -92,7 +92,7 @@ def testAllAlgorithms():
     stationary = False
 
     #TODO - Enter the actual number of pulls and runs we want to do for testing.
-    pulls = 200000
+    pulls = 1000
     runs = 100
 
     """
@@ -103,7 +103,7 @@ def testAllAlgorithms():
     #Epsilon Greedy algorithms
 
     #TODO - Enter the actial epsilons we want to test
-    epsilons = [0.5, 0.1, 0.15, 0.2]
+    epsilons = [1/128, 1/64, 1/32, 1/16, 1/8, 1/4]
     greedyAlgorithms = []
     alpha = 0.1
     for epsilon in epsilons:
@@ -113,7 +113,7 @@ def testAllAlgorithms():
         
     #Optimistic greedy
     #TODO - Enter teh actual initial values we want to test
-    initialValues = [1, 2, 3, 4, 5]
+    initialValues = [1/4, 1/2, 1, 2, 4]
     optimisticAlgorithms = []
     alpha = 0.1
     for initialValue in initialValues:
@@ -124,7 +124,7 @@ def testAllAlgorithms():
     #UCB
     alpha = 0.1
     #TODO - Enter the actual c values we want to test
-    cValues = [1, 2, 3, 4]
+    cValues = [1/16, 1/4, 1/2, 1, 2, 4]
     ucbAlgorithms = []
     for c in cValues:
         ucb = UCB(bandit, c, alpha)
@@ -133,7 +133,7 @@ def testAllAlgorithms():
         
     #Gradient
     #TODO - Enter teh actual alpha values we want to test
-    alphas = [0.05, 0.1, 0.15, 0.2]
+    alphas = [1/32, 1/16, 1/8, 1/4, 1/2, 1, 2]
     gradientAlgorithms = []
     for alpha in alphas:
         gradient = Gradient(bandit, alpha)
@@ -231,7 +231,7 @@ def testAlgorithms(bandit, algorithms, numberOfRuns, numberOfPulls, isStationary
                 optimalAction = 0
                 
                 stepSize = 1/(run+1)                
-                if (arm == algorithm.bandit.bestArm()):
+                if (arm == algorithm.bandit.bestArm):
                     optimalAction = 1
                 else:
                     optimalAction = 0
