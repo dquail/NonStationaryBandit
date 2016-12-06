@@ -42,6 +42,6 @@ It is one thing to test algorithms independently, but you can also test differen
 ##Results
 The following are several results obtained.
 
-![alt text](AlgorithmsCompared.jpg "Algorithms Compared")
+![alt text](Results/EpsilonGreedyStationaryVsNonStationaryAverageReward.png "Epsilon Greedy Compared")
 
 ##Further Study
