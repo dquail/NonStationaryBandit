@@ -40,8 +40,27 @@ It is one thing to test algorithms independently, but you can also test differen
 
 
 ##Results
-The following are several results obtained.
+The following are several results obtained when comparing algorithms against stationary and non stationary bandits. As you can tell, some algorithms continue to perform well (epsilon greedy with a constant step size, UCB). While others (epsilon greedy with average returns, optimistic greedy, and gradient start to perform more poorly as the bandit randomly walks. 
 
-![alt text](Results/EpsilonGreedyStationaryVsNonStationaryAverageReward.png "Epsilon Greedy Compared")
+Each graph below was taken as the average over 500 runs of 10,000 steps. Where not explicitly noted, an alpha and epsilon of 0.1 were used.
+
+Blue lines indicate the stationary bandit while green indicates the non-stationary version.
+
+Epsilon Greedy with using a average return. 
+
+![alt text](Results/EpsilonGreedyStationaryvsNonStationaryAverageReward10000Steps500Runs.png "Epsilon Greedy Compared")
+
+
+Epsilon Greedy with a constant step size of 0.1
+
+![alt text](Results/EpsilonGreedyStationaryVsNonStationaryConstantStep.png "Epsilon Greedy Compared")
+
+Upper confidence bound with c = 2 
+
+![alt text](Results/UCBNonStationaryVsStationary.png "UCB")
+
+Gradient method  
+
+![alt text](Results/GradientNonStationaryvsStationary.png "Gradient")
 
 ##Further Study
