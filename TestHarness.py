@@ -6,6 +6,26 @@ from Gradient import *
 """
 Functions to test algorithm individually. 
 """
+def testEpsilonGreedy(runs, pulls, stationary, alpha, epsilon):
+
+    #Initialize bandit
+    bandit = Bandit(10,0,1)
+
+    #Initialize algorithms
+    algorithms = []
+    
+    #Epsilon Greedy algorithm
+    epsilonGreedy = EpsilonGreedy(bandit, alpha, epsilon)
+    algorithms.append(epsilonGreedy)
+        
+    #Run tests
+    results = testAlgorithms(bandit, algorithms, runs, pulls, stationary)
+
+    #Analyze results
+    plotAlgorithmOptimalActions(results=results, algorithm=epsilonGreedy, stationary=stationary, alpha=alpha, eps=epsilon)       
+    
+    return results
+    
 def testUCB(runs, pulls, stationary, c, alpha):
 
     #Initialize bandit
@@ -45,26 +65,7 @@ def testGradient(runs, pulls, stationary, alpha):
     plotAlgorithmOptimalActions(results=results,algorithm=gradient, stationary=stationary,alpha=alpha)
     
     return results
-    
-def testEpsilonGreedy(runs, pulls, stationary, alpha, epsilon):
 
-    #Initialize bandit
-    bandit = Bandit(10,0,1)
-
-    #Initialize algorithms
-    algorithms = []
-    
-    #Epsilon Greedy algorithm
-    epsilonGreedy = EpsilonGreedy(bandit, alpha, epsilon)
-    algorithms.append(epsilonGreedy)
-        
-    #Run tests
-    results = testAlgorithms(bandit, algorithms, runs, pulls, stationary)
-
-    #Analyze results
-    plotAlgorithmOptimalActions(results=results, algorithm=epsilonGreedy, stationary=stationary, alpha=alpha, eps=epsilon)       
-    
-    return results
     
 def testOptimistic(runs, pulls, stationary, alpha, initialValues):
 
@@ -85,6 +86,162 @@ def testOptimistic(runs, pulls, stationary, alpha, initialValues):
     plotAlgorithmOptimalActions(results=results, algorithm=optimistic, stationary=stationary, alpha=alpha, initialValues = initialValues)       
     return results
     
+    
+"""
+Function to test an algorithm against itself - one with a stationary and one with non stationary
+"""
+def compareEpsilonGreedy(runs, pulls, alpha, epsilon):
+
+    #Initialize bandit
+    bandit = Bandit(10,0,1)
+
+    #Initialize algorithms
+    algorithms = []
+    
+    #Epsilon Greedy algorithm
+    epsilonGreedy = EpsilonGreedy(bandit, alpha, epsilon)
+    algorithms.append(epsilonGreedy)
+        
+    #Run tests
+    resultsStationary = testAlgorithms(bandit, algorithms, runs, pulls, True)
+    resultsNonStationary = testAlgorithms(bandit, algorithms, runs, pulls, False)
+    
+    #Analyze results
+    optimalActionsDictionaryStationary = resultsStationary['optimalActions']
+    optimalActionsStationary = optimalActionsDictionaryStationary[epsilonGreedy]
+
+    optimalActionsDictionaryNonStationary = resultsNonStationary['optimalActions']
+    optimalActionsNonStationary = optimalActionsDictionaryNonStationary[epsilonGreedy]
+    
+    fig = plt.figure(1)
+    fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+    ax = fig.add_subplot(211)
+    titleLabel = "Epsilon Greedy (stationary vs. non)"
+    ax.set_title(titleLabel)
+    ax.set_xlabel('Step/Pull')
+    ax.set_ylabel('Average reward')
+
+    ax.plot(optimalActionsStationary)
+    
+    ax.plot(optimalActionsNonStationary)
+    plt.show()
+    
+    return (optimalActionsStationary, optimalActionsNonStationary)
+
+def compareUCB(runs, pulls, c, alpha):
+
+    #Initialize bandit
+    bandit = Bandit(10,0,1)
+
+    #Initialize algorithms
+    algorithms = []
+
+    #Epsilon Greedy algorithm
+    ucb = UCB(bandit, c, alpha)
+    algorithms.append(ucb)
+
+    #Run tests
+    resultsStationary = testAlgorithms(bandit, algorithms, runs, pulls, True)
+    resultsNonStationary = testAlgorithms(bandit, algorithms, runs, pulls, False)
+
+    #Analyze results
+    optimalActionsDictionaryStationary = resultsStationary['optimalActions']
+    optimalActionsStationary = optimalActionsDictionaryStationary[ucb]
+
+    optimalActionsDictionaryNonStationary = resultsNonStationary['optimalActions']
+    optimalActionsNonStationary = optimalActionsDictionaryNonStationary[ucb]
+
+    fig = plt.figure(1)
+    fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+    ax = fig.add_subplot(211)
+    titleLabel = "UCB (stationary vs. non)"
+    ax.set_title(titleLabel)
+    ax.set_xlabel('Step/Pull')
+    ax.set_ylabel('Average reward')
+
+    ax.plot(optimalActionsStationary)
+
+    ax.plot(optimalActionsNonStationary)
+    plt.show()
+    
+    return (optimalActionsStationary, optimalActionsNonStationary)
+
+def compareGradient(runs, pulls, alpha):
+
+    #Initialize bandit
+    bandit = Bandit(10,0,1)
+
+    #Initialize algorithms
+    algorithms = []
+
+    #Epsilon Greedy algorithm
+    gradient = Gradient(bandit, alpha)
+    algorithms.append(gradient)
+
+    #Run tests
+    resultsStationary = testAlgorithms(bandit, algorithms, runs, pulls, True)
+    resultsNonStationary = testAlgorithms(bandit, algorithms, runs, pulls, False)
+
+    #Analyze results
+    optimalActionsDictionaryStationary = resultsStationary['optimalActions']
+    optimalActionsStationary = optimalActionsDictionaryStationary[gradient]
+
+    optimalActionsDictionaryNonStationary = resultsNonStationary['optimalActions']
+    optimalActionsNonStationary = optimalActionsDictionaryNonStationary[gradient]
+
+    fig = plt.figure(1)
+    fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+    ax = fig.add_subplot(211)
+    titleLabel = "Gradient (stationary vs. non)"
+    ax.set_title(titleLabel)
+    ax.set_xlabel('Step/Pull')
+    ax.set_ylabel('Average reward')
+
+    ax.plot(optimalActionsStationary)
+
+    ax.plot(optimalActionsNonStationary)
+    plt.show()
+
+    return (optimalActionsStationary, optimalActionsNonStationary)    
+    
+def compareOptimistic(runs, pulls, alpha, initialValues):
+
+    #Initialize bandit
+    bandit = Bandit(10,0,1)
+
+    #Initialize algorithms
+    algorithms = []
+
+    #Epsilon Greedy algorithm
+    optimistic = OptimisticGreedy(bandit, initialValues, alpha)
+    algorithms.append(optimistic)
+
+    #Run tests
+    resultsStationary = testAlgorithms(bandit, algorithms, runs, pulls, True)
+    resultsNonStationary = testAlgorithms(bandit, algorithms, runs, pulls, False)
+
+    #Analyze results
+    optimalActionsDictionaryStationary = resultsStationary['optimalActions']
+    optimalActionsStationary = optimalActionsDictionaryStationary[optimistic]
+
+    optimalActionsDictionaryNonStationary = resultsNonStationary['optimalActions']
+    optimalActionsNonStationary = optimalActionsDictionaryNonStationary[optimistic]
+
+    fig = plt.figure(1)
+    fig.suptitle('Bandit', fontsize=14, fontweight='bold')
+    ax = fig.add_subplot(211)
+    titleLabel = "Optimistic Greedy (stationary vs. non)"
+    ax.set_title(titleLabel)
+    ax.set_xlabel('Step/Pull')
+    ax.set_ylabel('Average reward')
+
+    ax.plot(optimalActionsStationary)
+
+    ax.plot(optimalActionsNonStationary)
+    plt.show()    
+    
+    return (optimalActionsStationary, optimalActionsNonStationary)
+        
 """
 Function to test several different algorithms using the same bandit
 """
