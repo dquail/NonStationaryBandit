@@ -52,20 +52,16 @@ Blue lines indicate the stationary bandit while green indicates the non-stationa
 compareEpsilonGreedy(runs=500, pulls=10000, alpha=-1, epsilon=0.1) #alpha = -1 indicates average return
 ````
 ![alt text](Results/EpsilonGreedyStationaryvsNonStationaryAverageReward10000Steps500Runs.png "Epsilon Greedy Compared")
-
 ###Epsilon Greedy with a constant step size of 0.1
 ```python
 compareEpsilonGreedy(runs=500, pulls=10000, alpha=0.1, epsilon=0.1)
 ````
 ![alt text](Results/EpsilonGreedyStationaryVsNonStationaryConstantStep.png "Epsilon Greedy Compared")
-
 ###Upper confidence bound with c = 2 
-
 ```python
 compareUCB(runs=500, pulls=10000, c=2, alpha=0.1)
 ````
 ![alt text](Results/UCBNonStationaryVsStationary.png "UCB")
-
 ###Gradient method  
 ```python
 compareGradient(runs=500, pulls=10000, alpha=0.1)
