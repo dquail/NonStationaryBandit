@@ -255,7 +255,7 @@ def testAllAlgorithms():
     stationary = False
 
     #TODO - Enter the actual number of pulls and runs we want to do for testing.
-    pulls = 100000
+    pulls = 200000
     runs = 100
 
     """

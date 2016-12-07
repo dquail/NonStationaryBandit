@@ -68,4 +68,11 @@ compareGradient(runs=500, pulls=10000, alpha=0.1)
 ````
 ![alt text](Results/GradientNonStationaryvsStationary.png "Gradient")
 
+###Optimistic greedy
+```python
+compareOptimistic(runs=5000, pulls=10000, alpha=0.1, initialValues=5)
+````
+![alt text](Results/OptimisticGreedyStationaryvsNonStationary.png "Optimistic")
+
+
 ##Further Study
