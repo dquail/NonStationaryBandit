@@ -46,21 +46,30 @@ Each graph below was taken as the average over 500 runs of 10,000 steps. Where n
 
 Blue lines indicate the stationary bandit while green indicates the non-stationary version.
 
-Epsilon Greedy with using a average return. 
-
+###Epsilon Greedy with using a average return.
+ 
+```python
+compareEpsilonGreedy(runs=500, pulls=10000, alpha=-1, epsilon=0.1) #alpha = -1 indicates average return
+````
 ![alt text](Results/EpsilonGreedyStationaryvsNonStationaryAverageReward10000Steps500Runs.png "Epsilon Greedy Compared")
 
-
-Epsilon Greedy with a constant step size of 0.1
-
+###Epsilon Greedy with a constant step size of 0.1
+```python
+compareEpsilonGreedy(runs=500, pulls=10000, alpha=0.1, epsilon=0.1)
+````
 ![alt text](Results/EpsilonGreedyStationaryVsNonStationaryConstantStep.png "Epsilon Greedy Compared")
 
-Upper confidence bound with c = 2 
+###Upper confidence bound with c = 2 
 
+```python
+compareUCB(runs=500, pulls=10000, c=2, alpha=0.1)
+````
 ![alt text](Results/UCBNonStationaryVsStationary.png "UCB")
 
-Gradient method  
-
+###Gradient method  
+```python
+compareGradient(runs=500, pulls=10000, alpha=0.1)
+````
 ![alt text](Results/GradientNonStationaryvsStationary.png "Gradient")
 
 ##Further Study
