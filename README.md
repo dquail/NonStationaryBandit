@@ -1,13 +1,13 @@
 #Reinforcement learning for Non-Stationary bandits
 
 ##Problem Description
-Imagine a slot machine with multiple arms that can be pulled. However, unlike most slot machine, imagine this machine actually has a "best" arm to pull. If the reward you received from each arm was deterministic, learning which arm to pull would be simple. Just pull each 10, keep track of which arm received the most reward, and then start picking that arm each pull in the future. However, for practical bandit problems, it is not so simple for several reasons:
+Imagine a slot machine with multiple arms that can be pulled. However, unlike most slot machines, imagine this machine actually has a "best" arm to pull. If the reward you received from each arm was deterministic, learning which arm to pull would be simple. Just pull each arm, keep track of which arm received the most reward, and then start picking that arm each pull in the future. However, for practical bandit problems, it is not so simple for several reasons:
 - The values returned are stochastic. So the task of determining which arm to pull requires sampling from several different arms several times
 - You must balance exploration with exploitation given your task is to maximize rewards - not just determine which is the "best" arm.
 - The mean value of these arms may change over time. This is considered "non-stationary." Given this type of environment, exploration is constantly needed.
 
 ##Solution
-We will use Reinforcement learning - comparing several different bandit algorithms and parameters to determine which perform best - primarily in non-stationary environments. These algorithms attempt to balance exploration and exploitation in different ways. Each algorithm can be tweaked appropriately by changing some parameter.
+We will compare several different Reinforcement learning algorithms- and parameters to determine which perform best - primarily in non-stationary environments. These algorithms attempt to balance exploration and exploitation in different ways. Each algorithm can be tweaked appropriately by changing some parameter.
 
 ##Usage
 There are several important files main files:
@@ -19,9 +19,10 @@ There are several important files main files:
   * Each arm has a mean and variance from which rewards are stochastically returned
 3.  [Bandit.py](Bandit.py)
   * Contains several arms, each of which can be "pulled" to receive a reward.
+4. [EpsilonGreedy.py](EpsilonGreedy.py), [Gradient.py](Gradient.py), [OptimisticGreedy.py](OptimisticGreedy.py) [UCB.py](UCB.py)
+  * The various learning algorithms.
 
-There are two basic ways to test various algorithms, both from within TestHarness.py
-Testing each algorithm can be done in a similar fashion as:
+You can call the learning methods directly, but in addition, there are a few basic ways to test various algorithms, both from within TestHarness.py
 
 ```python
 from TestHarness import *
@@ -76,6 +77,5 @@ compareGradient(runs=500, pulls=10000, alpha=0.1)
 compareOptimistic(runs=5000, pulls=10000, alpha=0.1, initialValues=5)
 ````
 ![alt text](Results/OptimisticGreedyStationaryvsNonStationary.png "Optimistic")
-
 
 ##Further Study

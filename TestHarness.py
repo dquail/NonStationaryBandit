@@ -266,7 +266,8 @@ def testAllAlgorithms():
     #Epsilon Greedy algorithms
 
     #TODO - Enter the actial epsilons we want to test
-    epsilons = [1/128, 1/64, 1/32, 1/16, 1/8, 1/4]
+    #epsilons = [1/128, 1/64, 1/32, 1/16, 1/8, 1/4]
+    epsilons = [1/256]
     greedyAlgorithms = []
     alpha = 0.1
     for epsilon in epsilons:
@@ -276,7 +277,8 @@ def testAllAlgorithms():
         
     #Optimistic greedy
     #TODO - Enter teh actual initial values we want to test
-    initialValues = [1/4, 1/2, 1, 2, 4]
+    #initialValues = [1/4, 1/2, 1, 2, 4]
+    initialValues = [6, 8, 10]
     optimisticAlgorithms = []
     alpha = 0.1
     for initialValue in initialValues:
@@ -287,7 +289,8 @@ def testAllAlgorithms():
     #UCB
     alpha = 0.1
     #TODO - Enter the actual c values we want to test
-    cValues = [1/16, 1/4, 1/2, 1, 2, 4]
+    #cValues = [1/16, 1/4, 1/2, 1, 2, 4]
+    cValues = [6, 8]
     ucbAlgorithms = []
     for c in cValues:
         ucb = UCB(bandit, c, alpha)
@@ -298,10 +301,12 @@ def testAllAlgorithms():
     #TODO - Enter teh actual alpha values we want to test
     alphas = [1/32, 1/16, 1/8, 1/4, 1/2, 1, 2]
     gradientAlgorithms = []
+    """
     for alpha in alphas:
         gradient = Gradient(bandit, alpha)
         algorithms.append(gradient)
         gradientAlgorithms.append(gradient)
+    """
     
     """
     Step 4: Run the tests
