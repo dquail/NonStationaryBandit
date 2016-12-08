@@ -78,4 +78,30 @@ compareOptimistic(runs=5000, pulls=10000, alpha=0.1, initialValues=5)
 ````
 ![alt text](Results/OptimisticGreedyStationaryvsNonStationary.png "Optimistic")
 
+###Baseline Results for Stationary
+In order to make sure the algorithms were working, baseline tests were performed and compared against the results in "An Introduction To Reinforcement Learning"
+###Epsilon Greedy with a, eps = 0.1
+```python
+testEpsilonGreedy(runs=2000, pulls=1000, stationary=True, alpha=0.1, epsilon=0.1):
+````
+![alt text](Results/Stationary/EpsilonGreedy.png "EpsilonGreedy")
+
+###Optimistic with Q0 = 5
+```python
+testOptimistic(runs=2000, pulls=1000, stationary=True, alpha=0.1, initialValues=5):
+````
+![alt text](Results/Stationary/Optimistic.png "Optimistic")
+
+###UCB with c = 2
+```python
+testUCB(2000,1000,True, 2, 0.1)
+````
+![alt text](Results/Stationary/UCBRewards.png "UCB")
+
+###Gradient with alpha = 0.1
+```python
+testGradient(2000, 1000, False, 0.1)
+````
+![alt text](Results/Stationary/Gradient.png "Gradient")
+
 ##Further Study

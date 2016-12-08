@@ -419,9 +419,11 @@ def testAlgorithms(bandit, algorithms, numberOfRuns, numberOfPulls, isStationary
 
 def plotAlgorithmOptimalActions(results, algorithm, stationary, alpha=-1, eps=-1, c=-1, initialValues=-1):
     optimalActionsDictionaryOfAllAlgorithms = results['optimalActions']
-
     optimalActions = optimalActionsDictionaryOfAllAlgorithms[algorithm]
-    
+
+    averageRewardDictionaryOfAllAlgorithms = results['rewards']
+    averageRewards = averageRewardDictionaryOfAllAlgorithms[algorithm]
+
     if not alpha == -1:
         alphaString = " Alpha: " + str(alpha) + " "
     else:
@@ -447,9 +449,10 @@ def plotAlgorithmOptimalActions(results, algorithm, stationary, alpha=-1, eps=-1
     titleLabel = "Algorithm name: " + algorithm.name + " Sationary: " + str(stationary) + alphaString + epsString + cString + initialValuesString
     ax.set_title(titleLabel)
     ax.set_xlabel('Step/Pull')
+    #ax.set_ylabel('Optimal Action pct')
     ax.set_ylabel('Average reward')
 
-    ax.plot(optimalActions)
+    ax.plot(averageRewards)
     plt.show()
 
 
