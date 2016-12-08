@@ -1,7 +1,7 @@
 #Reinforcement learning for Non-Stationary bandits
 
 ##Problem Description
-Imagine a slot machine with multiple arms that can be pulled. However, unlike most slot machine, imagine this machine actually has a "best" arm to pull. If the reward you received from each arm was deterministic, determining which arm to pull would be simple. Just pull each 10, keep track of which arm received the most reward, and then start picking that arm each pull in the future. However, for practical bandit problems, it is not so simple for several reasons:
+Imagine a slot machine with multiple arms that can be pulled. However, unlike most slot machine, imagine this machine actually has a "best" arm to pull. If the reward you received from each arm was deterministic, learning which arm to pull would be simple. Just pull each 10, keep track of which arm received the most reward, and then start picking that arm each pull in the future. However, for practical bandit problems, it is not so simple for several reasons:
 - The values returned are stochastic. So the task of determining which arm to pull requires sampling from several different arms several times
 - You must balance exploration with exploitation given your task is to maximize rewards - not just determine which is the "best" arm.
 - The mean value of these arms may change over time. This is considered "non-stationary." Given this type of environment, exploration is constantly needed.
