@@ -1,5 +1,6 @@
 from pylab import *
 from Arm import *
+import random
 
 class Bandit:
     
@@ -22,10 +23,11 @@ class Bandit:
             arm = Arm(armRealMean, self.variance)
             self.arms.append(arm)
         self.bestArm = self.calculateBestArm()
-        
+    #TODO: Get rid of the shuffle after testing
     def walk(self, meanStep = 0, varianceStep = 0.01):
         for arm in self.arms:
             arm.walk(meanStep, varianceStep)
+        random.shuffle(self.arms)
         self.bestArm = self.calculateBestArm()
         
     def printBandit(self):

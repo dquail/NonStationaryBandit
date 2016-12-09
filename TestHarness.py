@@ -409,7 +409,9 @@ def testAlgorithms(bandit, algorithms, numberOfRuns, numberOfPulls, isStationary
                     
                 #Walk the bandit if necessary
                 if (not isStationary):
-                    bandit.walk()
+                    # TODO: Remove after testing
+                    if pull % 1000 == 0:
+                        bandit.walk()
             
         #Finished the run, Reset to a new bandit.
         bandit.reset()

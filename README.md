@@ -104,4 +104,25 @@ testGradient(2000, 1000, False, 0.1)
 ````
 ![alt text](Results/Stationary/Gradient.png "Gradient")
 
+##A sudden change in the environment
+The non-stationary environments were designed to change very gradually over time. They wouuld take a random walk of 0,01 every pull. Another result which is interesting is how these algorithms perform if the change isn't gradual but sudden. Which algorithms recover quickly? Which get stuck choosing a sub optimal arm.
+To determine this the dynamics were changed that every 1000'th step the arms would be completely shuffled. So the "best" arm would be changed every 1000 steps.
+The results are as follows (the blue linne indicates the algorithms performance when the environment is stationary. The green line indicates the algorithms performance when the environment shuffles every 1000 steps:
+
+Epsilon Greedy with weighted average (1/n step size)
+![alt text](Results/ShuffleEvery1000/EpsilonAverageReturn.png "Epsilon Average")
+
+Epsilon Greedy with constant step size alpha = 0.1
+![alt text](Results/ShuffleEvery1000/EpsilonConstantAlpha.png "Epsilon Constant")
+
+Optimistic, alpha = 0.1
+![alt text](Results/ShuffleEvery1000/OptimisticGreedy.png "Optimistic")
+
+Gradient, alpha = 0.1
+![alt text](Results/ShuffleEvery1000/Gradient.png "Gradient")
+
+UCB, c=2
+![alt text](Results/ShuffleEvery1000/UCB.png "UCB")
+
+
 ##Further Study
