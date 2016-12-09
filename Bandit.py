@@ -27,7 +27,7 @@ class Bandit:
     def walk(self, meanStep = 0, varianceStep = 0.01):
         for arm in self.arms:
             arm.walk(meanStep, varianceStep)
-        random.shuffle(self.arms)
+
         self.bestArm = self.calculateBestArm()
         
     def printBandit(self):
