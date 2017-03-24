@@ -1,12 +1,12 @@
-# Introduction to Reinforcement Learning via Non-Stationary bandits
+#Introduction to Reinforcement Learning via Non-Stationary bandits
 
-## Problem Description
+##Problem Description
 Imagine a slot machine with multiple arms that can be pulled. However, unlike most slot machines, imagine this machine actually has a "best" arm to pull. If the reward you received from each arm was deterministic, learning which arm to pull would be simple. Just pull each arm, keep track of which arm received the most reward, and then start picking that arm each pull in the future. However, for practical bandit problems, it is not so simple for several reasons:
 - The values returned are stochastic. So the task of determining which arm to pull requires sampling from several different arms several times
 - You must balance exploration with exploitation given your task is to maximize rewards - not just determine which is the "best" arm.
 - The mean value of these arms may change over time. This is considered "non-stationary." Given this type of environment, exploration is constantly needed.
 
-## Solution
+##Solution
 Reinforcement Learning provides classes of solutions for this type of problem. These solutions allow intelligent "agents" to learn through self generated experience. The agent experiences the world, and through this experimentation, begins to learn what is good and bad, with respect to an end goal. This could be contrasted to supervised learning, where the agent is explicitly told what is the right answer, through thousands, millions, billions or more training examples. Like a child being shown flash cards of objects, the agent eventually learns. While the flashcards are akin to rote supervised learning, in contrast, a child learning to perceive a dog, does so by experiencing interacting with the dog touching, feeling, and listening to it's bark, is comparable to reinforcement learning. The promise of reinforcement learning is that because this experience is self generated, and more general, it can scale better than simple supervised rote learning.
 With this definition, it is easy to see that Reinforcement Learning could be a strong and appropriate solution set for the problem of determining which arm to pull, given a multi arm bandit.
 
@@ -18,7 +18,7 @@ Many introductions to reinforcement learning include dependencies on tools such 
 Hopefully, this github repository can demonstrate the simplicity and power of a problem suitable for reinforcement learning, as well as an solution. All that is needed is python. I am confident that reading this documentation and code, you'll understand the fundamentals of Reinforcement learning.
 
 
-## Reinforcement Learning ... more ...
+##Reinforcement Learning ... more ...
 The basic reinforcement learning framework is simple. The agent (your algorithm) determines what state it's in based off of some sensation, determines what action to take (based on what it's learned), and performs this action within the environment. The environment responds with a reward and state update. In the bandit example, there is only one state, so the agent, based on experience decides which arm to pull. Once pulled, the environment responds with a reward (the amount recieved from pulling the slot machine). If the reward was largely positive, the agent would be wise to favor this action in the future. Conversly, if the reward was negative, the agent would be wise to avoid this. This of course is over simplifying. Life, and the bandit example, is stochastic. You may pull an arm of the bandit and recieve a negative reward, but there may be a massive jackpot waiting 2 pulls away. Therein lies the balance between exploration and exploitation. A successful player at the casino would balance pulling the most optimal arm of the bandit with the reality that they may not know the most optimal, and require exploration. Nevertheless, the basic Reinforcement Loop is simple. The agent senses it's state, determines it's "best action", takes that action, and is given a reward. Given that reward, it learns what it may do in the future to perform even better.
 
 ![alt text](Reference/RLLoop.png "RLLoop")
@@ -89,7 +89,7 @@ algorithm.learn(reward, arm)
 This is effectively the core of the reinforcement learning solution for bandits. Included in this repository is the full code for a test harness that initializes a bandit, and executes the environment based on the learning algorithms agent. I hope that any developer will be able to successfully read the code in this repository after reading this description and see for themselves how a simple problem such as bandits can be solved.
 
 
-## Usage
+##Usage
 There are several important files main files:
 
 1. [TestHarness.py](TestHarness.py)
@@ -112,10 +112,10 @@ are created randomly. Therefore the results could be incredibly skewed (for
 better or worse) depending on what type of bandit was created. ie. if one arm 
 is significantly better than all others, all algorithms will perform well. 
 """
-# Plot the average reward at each pull, averaged over 1000 different runs
+#Plot the average reward at each pull, averaged over 1000 different runs
 testUCB(runs = 1000, pulls = 20000, stationary = False, c=2, alpha=0.1)
 
-# Same as above, but for a stationary bandit and using a gradient method
+#Same as above, but for a stationary bandit and using a gradient method
 testGradient(runs=1000, pulls=20000, stationary=True, alpha=0.1):
 
 ```
@@ -123,68 +123,68 @@ testGradient(runs=1000, pulls=20000, stationary=True, alpha=0.1):
 It is one thing to test algorithms independently, but you can also test different algorithms and parameter values at the same time using the same bandit. This is important since, if you're comparing algorithms against each other, you want each to have an equal chance against each other. To do so, you can manipulate def testAllAlgorithms() method such that it instantiates the algorithms that you want tested. 
 
 
-## Results
+##Results
 The following are several results obtained when comparing algorithms against stationary and non stationary bandits. As you can tell, some algorithms continue to perform well (epsilon greedy with a constant step size, UCB). While others (epsilon greedy with average returns, optimistic greedy, and gradient start to perform more poorly as the bandit randomly walks. 
 
 Each graph below was taken as the average over 500 runs of 10,000 steps. Where not explicitly noted, an alpha and epsilon of 0.1 were used.
 
 Blue lines indicate the stationary bandit while green indicates the non-stationary version.
 
-### Epsilon Greedy with using a average return.
+###Epsilon Greedy with using a average return.
  
 ```python
 compareEpsilonGreedy(runs=500, pulls=10000, alpha=-1, epsilon=0.1) #alpha = -1 indicates average return
 ````
 ![alt text](Results/EpsilonGreedyStationaryvsNonStationaryAverageReward10000Steps500Runs.png "Epsilon Greedy Compared")
-### Epsilon Greedy with a constant step size of 0.1
+###Epsilon Greedy with a constant step size of 0.1
 ```python
 compareEpsilonGreedy(runs=500, pulls=10000, alpha=0.1, epsilon=0.1)
 ````
 ![alt text](Results/EpsilonGreedyStationaryVsNonStationaryConstantStep.png "Epsilon Greedy Compared")
-### Upper confidence bound with c = 2 
+###Upper confidence bound with c = 2 
 ```python
 compareUCB(runs=500, pulls=10000, c=2, alpha=0.1)
 ````
 ![alt text](Results/UCBNonStationaryVsStationary.png "UCB")
-### Gradient method  
+###Gradient method  
 ```python
 compareGradient(runs=500, pulls=10000, alpha=0.1)
 ````
 ![alt text](Results/GradientNonStationaryvsStationary.png "Gradient")
 
-### Optimistic greedy
+###Optimistic greedy
 ```python
 compareOptimistic(runs=5000, pulls=10000, alpha=0.1, initialValues=5)
 ````
 ![alt text](Results/OptimisticGreedyStationaryvsNonStationary.png "Optimistic")
 
-### Baseline Results for Stationary
+###Baseline Results for Stationary
 In order to make sure the algorithms were working, baseline tests were performed and compared against the results in "An Introduction To Reinforcement Learning"
-### Epsilon Greedy with a, eps = 0.1
+###Epsilon Greedy with a, eps = 0.1
 ```python
 testEpsilonGreedy(runs=2000, pulls=1000, stationary=True, alpha=0.1, epsilon=0.1):
 ````
 ![alt text](Results/Stationary/EpsilonGreedy.png "EpsilonGreedy")
 
-### Optimistic with Q0 = 5
+###Optimistic with Q0 = 5
 ```python
 testOptimistic(runs=2000, pulls=1000, stationary=True, alpha=0.1, initialValues=5):
 ````
 ![alt text](Results/Stationary/Optimistic.png "Optimistic")
 
-### UCB with c = 2
+###UCB with c = 2
 ```python
 testUCB(2000,1000,True, 2, 0.1)
 ````
 ![alt text](Results/Stationary/UCBRewards.png "UCB")
 
-### Gradient with alpha = 0.1
+###Gradient with alpha = 0.1
 ```python
 testGradient(2000, 1000, False, 0.1)
 ````
 ![alt text](Results/Stationary/Gradient.png "Gradient")
 
-## A sudden change in the environment
+##A sudden change in the environment
 The non-stationary environments were designed to change very gradually over time. They wouuld take a random walk of 0,01 every pull. Another result which is interesting is how these algorithms perform if the change isn't gradual but sudden. Which algorithms recover quickly? Which get stuck choosing a sub optimal arm.
 To determine this the dynamics were changed that every 1000'th step the arms would be completely shuffled. So the "best" arm would be changed every 1000 steps.
 The results are as follows (the blue linne indicates the algorithms performance when the environment is stationary. The green line indicates the algorithms performance when the environment shuffles every 1000 steps:
@@ -204,7 +204,7 @@ Gradient, alpha = 0.1
 UCB, c=2
 ![alt text](Results/ShuffleEvery1000/UCB.png "UCB")
 
-### Parameter range
+###Parameter range
 ![alt text](Results/PerformanceGraph.png "Performance comparison")
 
-## Further Study
+##Further Study
